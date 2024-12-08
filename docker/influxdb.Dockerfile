@@ -1,0 +1,4 @@
+FROM influxdb:2.7
+ENV INFLUXDB_ADMIN_USER=admin
+ENV INFLUXDB_ADMIN_PASSWORD=securepassword
+ENV INFLUXDB_DB=market_data

@@ -1,0 +1,46 @@
+services:
+  julia:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ./src:/app/src
+    environment:
+      - DATABASE_URL=postgresql://fxuser:securepassword@postgres:5432/fxtrader
+      - INFLUXDB_URL=http://influxdb:8086
+    depends_on:
+      - postgres
+      - influxdb
+    ports:
+      - "8000:8000"
+    networks:
+      - fxnet
+
+  postgres:
+    build:
+      context: .
+      dockerfile: docker/postgres.Dockerfile
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - fxnet
+
+  influxdb:
+    build:
+      context: .
+      dockerfile: docker/influxdb.Dockerfile
+    volumes:
+      - influxdb_data:/var/lib/influxdb
+    ports:
+      - "8086:8086"
+    networks:
+      - fxnet
+
+volumes:
+  postgres_data:
+  influxdb_data:
+
+networks:
+  fxnet:

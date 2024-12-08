@@ -1,0 +1,31 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build Docker Containers
+        run: docker-compose build
+
+      - name: Run Tests
+        run: docker-compose run --rm julia julia --project=src/ -e "using Pkg; Pkg.test()"
+
+      - name: Security Scan with Snyk
+        uses: snyk/actions/docker@master
+        with:
+          image: fx-trader-bot_julia
+          args: test
+
+      - name: Lint Julia Code
+        run: julia -e 'using JuliaFormatter; format("src")'

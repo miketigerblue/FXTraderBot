@@ -1,0 +1,6 @@
+repos:
+  - repo: https://github.com/domluna/JuliaFormatter
+    rev: stable
+    hooks:
+      - id: julia-formatter
+
